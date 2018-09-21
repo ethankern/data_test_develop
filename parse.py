@@ -24,40 +24,43 @@ header = ['MlsId','MlsName','DateListed','StreetAddress','Price','Bedrooms','Bat
 csvwriter.writerow(header)
 
 for node in root.findall('Listing'):    # Iterates searches over a list of each Listing.
+                                                  # Only want descriptions with the word 'and',
+                                                  # and only listings posted in 2016.
+          if ' and ' in node.find('.//Description').text and '2016' in node.find('.//DateListed').text:
+                    
+                    listing = []                  # A row to be populated for each listing.
           
-          listing = []                  # A row to be populated.
+                                                  # Search each desired tag for child nodes 
+                                                  # and add their text to the row.
+                    MlsId = node.find('.//MlsId').text
+                    listing.append(MlsId)
+                    MlsName = node.find('.//MlsName').text
+                    listing.append(MlsName)
+                    DateListed = node.find('.//DateListed').text
+                    listing.append(DateListed)
+                    StreetAddress = node.find('.//StreetAddress').text
+                    listing.append(StreetAddress)
+                    Price = node.find('.//Price').text
+                    listing.append(Price)
+                    Bedrooms = node.find('.//Bedrooms').text
+                    listing.append(Bedrooms)
+                    Bathrooms = node.find('.//Bathrooms').text
+                    listing.append(Bathrooms)
+                                                  # Nodes with additional children
+                    Appliances = []               # have each child listed.
+                    for appliance in node.findall('.//Appliance'):
+                              Appliances.append(appliance.text)
+                    listing.append(Appliances)
           
-                                        # Search each desired tag for child nodes 
-                                        # and add their text to the row.
-          MlsId = node.find('.//MlsId').text
-          listing.append(MlsId)
-          MlsName = node.find('.//MlsName').text
-          listing.append(MlsName)
-          DateListed = node.find('.//DateListed').text
-          listing.append(DateListed)
-          StreetAddress = node.find('.//StreetAddress').text
-          listing.append(StreetAddress)
-          Price = node.find('.//Price').text
-          listing.append(Price)
-          Bedrooms = node.find('.//Bedrooms').text
-          listing.append(Bedrooms)
-          Bathrooms = node.find('.//Bathrooms').text
-          listing.append(Bathrooms)
-                                        # Nodes with additional children
-          Appliances = []               # have each child listed.
-          for appliance in node.findall('.//Appliance'):
-                    Appliances.append(appliance.text)
-          listing.append(Appliances)
+                    Rooms = []
+                    for room in node.findall('.//Room'):
+                              Rooms.append(room.text)
+                    listing.append(Rooms)
           
-          Rooms = []
-          for room in node.findall('.//Room'):
-                    Rooms.append(room.text)
-          listing.append(Rooms)
+                    Description = node.find('.//Description').text[0:200]
+                    listing.append(Description)
           
-          Description = node.find('.//Description').text[0:200]
-          listing.append(Description)
-          
-          csvwriter.writerow(listing)
+                    csvwriter.writerow(listing)
 
 
 
