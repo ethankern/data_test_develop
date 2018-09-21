@@ -20,14 +20,14 @@ root = tree.getroot()
 
 
 # Write csv header row.
-header = ['MlsId','MlsName','DateListed','StreetAddress','Price','Bedrooms','Bathrooms','Appliances','Description']
+header = ['MlsId','MlsName','DateListed','StreetAddress','Price','Bedrooms','Bathrooms','Appliances','Rooms','Description']
 csvwriter.writerow(header)
 
 for node in root.findall('Listing'):    # Iterates searches over a list of each Listing.
           
           listing = []                  # A row to be populated.
           
-                                        # Search each desired tag to find child nodes 
+                                        # Search each desired tag for child nodes 
                                         # and add their text to the row.
           MlsId = node.find('.//MlsId').text
           listing.append(MlsId)
@@ -43,10 +43,17 @@ for node in root.findall('Listing'):    # Iterates searches over a list of each 
           listing.append(Bedrooms)
           Bathrooms = node.find('.//Bathrooms').text
           listing.append(Bathrooms)
-          Appliances = node.find('.//Appliances').text
+                                        # Nodes with additional children
+          Appliances = []               # have each child listed.
+          for appliance in node.findall('.//Appliance'):
+                    Appliances.append(appliance.text)
           listing.append(Appliances)
-          #Rooms = node.find('.//Rooms').text     # This text method fails if there is no Rooms tag in a listing.
-          #listing.append(Rooms)
+          
+          Rooms = []
+          for room in node.findall('.//Room'):
+                    Rooms.append(room.text)
+          listing.append(Rooms)
+          
           Description = node.find('.//Description').text[0:200]
           listing.append(Description)
           
