@@ -19,48 +19,60 @@ tree = ET.parse("BoojCodeTest.xml")
 root = tree.getroot()
 
 
+# Function takes a listing (ET.element object) and returns string
+# containing what we want to sort the listings by.
+# Need this as the key for sorting by date or by anything else.
+def return_text(listing):
+                                        # Can change DateListed to whatever child tag
+                                        # we want to sort by.
+          return listing.find('.//DateListed').text
+
+
 # Write csv header row.
 header = ['MlsId','MlsName','DateListed','StreetAddress','Price','Bedrooms','Bathrooms','Appliances','Rooms','Description']
 csvwriter.writerow(header)
 
-for node in root.findall('Listing'):    # Iterates searches over a list of each Listing.
-                                                  # Only want descriptions with the word 'and',
+
+                                        # Iterate search over each Listing element in the tree,
+                                        # and sort by the tag's text (a string) defined in return_text().
+for listing in sorted(root.findall('Listing'), key=return_text):
+                                                  # Only want descriptions containing the word 'and',
                                                   # and only listings posted in 2016.
-          if ' and ' in node.find('.//Description').text and '2016' in node.find('.//DateListed').text:
+          if ' and ' in listing.find('.//Description').text and '2016' in listing.find('.//DateListed').text:
                     
-                    listing = []                  # A row to be populated for each listing.
+                    row = []                  # A row to be populated for each listing.
           
-                                                  # Search each desired tag for child nodes 
+                                                  # Search each desired tag for child elements 
                                                   # and add their text to the row.
-                    MlsId = node.find('.//MlsId').text
-                    listing.append(MlsId)
-                    MlsName = node.find('.//MlsName').text
-                    listing.append(MlsName)
-                    DateListed = node.find('.//DateListed').text
-                    listing.append(DateListed)
-                    StreetAddress = node.find('.//StreetAddress').text
-                    listing.append(StreetAddress)
-                    Price = node.find('.//Price').text
-                    listing.append(Price)
-                    Bedrooms = node.find('.//Bedrooms').text
-                    listing.append(Bedrooms)
-                    Bathrooms = node.find('.//Bathrooms').text
-                    listing.append(Bathrooms)
-                                                  # Nodes with additional children
+                    MlsId = listing.find('.//MlsId').text
+                    row.append(MlsId)
+                    MlsName = listing.find('.//MlsName').text
+                    row.append(MlsName)
+                    DateListed = listing.find('.//DateListed').text
+                    row.append(DateListed)
+                    StreetAddress = listing.find('.//StreetAddress').text
+                    row.append(StreetAddress)
+                    Price = listing.find('.//Price').text
+                    row.append(Price)
+                    Bedrooms = listing.find('.//Bedrooms').text
+                    row.append(Bedrooms)
+                    Bathrooms = listing.find('.//Bathrooms').text
+                    row.append(Bathrooms)
+                                                  # Elements with additional children
                     Appliances = []               # have each child listed.
-                    for appliance in node.findall('.//Appliance'):
+                    for appliance in listing.findall('.//Appliance'):
                               Appliances.append(appliance.text)
-                    listing.append(Appliances)
+                    row.append(Appliances)
           
                     Rooms = []
-                    for room in node.findall('.//Room'):
+                    for room in listing.findall('.//Room'):
                               Rooms.append(room.text)
-                    listing.append(Rooms)
+                    row.append(Rooms)
           
-                    Description = node.find('.//Description').text[0:200]
-                    listing.append(Description)
+                    Description = listing.find('.//Description').text[0:200]
+                    row.append(Description)
           
-                    csvwriter.writerow(listing)
+                    csvwriter.writerow(row)
 
 
 
