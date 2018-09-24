@@ -1,0 +1,15 @@
+#############################################
+# Dependencies for XML to CSV parser parse.py
+#############################################
+
+# CSV writing functions
+csv
+
+# RegEx functions
+re
+
+# Http request dependencies
+requests
+
+# XML parsing functions
+xml
