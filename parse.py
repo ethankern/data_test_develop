@@ -1,3 +1,10 @@
+# parse.py
+# Parses a target XML document and writes 
+# its data to an organized CSV file.
+#
+# Ethan Kern
+# 24Sept2018
+
 import csv
 import re
 import requests
